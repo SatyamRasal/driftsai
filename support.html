@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Support — Drifts AI</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Submit feedback, complaints, or a new requirement through the Drifts AI support page.">
+<meta name="theme-color" content="#5b5dff">
+<link rel="canonical" href="https://driftsai.com/support.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Support — Drifts AI">
+<meta property="og:description" content="Submit feedback, complaints, or a new requirement through the Drifts AI support page.">
+<meta property="og:url" content="https://driftsai.com/support.html">
+<meta property="og:image" content="https://driftsai.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Support — Drifts AI">
+<meta name="twitter:description" content="Submit feedback, complaints, or a new requirement through the Drifts AI support page.">
+<link rel="icon" href="/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/assets/css/styles.css">
+
+
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <nav class="nav">
+      <a class="brand" href="/index.html" aria-label="Drifts AI home">
+        <span class="brand-mark">D</span>
+        <span>Drifts AI</span>
+      </a>
+      <button class="btn-outline nav-toggle" data-menu-toggle aria-expanded="false">Menu</button>
+      <div class="nav-links" data-menu>
+        <a data-nav href="/index.html">Home</a>
+        <a data-nav href="/about.html">About</a>
+        <a data-nav href="/products.html">Products</a>
+        <a data-nav href="/support.html">Support</a>
+        <a data-nav href="/inquiries.html">Inquiries</a>
+        <a data-nav href="/admin.html">Admin</a>
+      </div>
+      <div class="nav-actions">
+        <button class="toggle" data-theme-toggle type="button">Dark</button>
+        <button class="btn-outline" data-currency="INR" type="button">INR</button>
+        <button class="btn-outline" data-currency="USD" type="button">USD</button>
+        <a class="btn" href="/products.html">View Products</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+  <main>
+
+    <section class="section">
+      <div class="container grid grid-2">
+        <div class="card">
+          <span class="badge">Support center</span>
+          <h1>Need help?</h1>
+          <p>Send feedback, complaints, or a new requirement. Everything is captured in Supabase so you can manage responses in the admin CRM.</p>
+          <div class="panel">
+            <h3>Fast response workflow</h3>
+            <p>Short, structured forms make it easier to sort requests and reply quickly.</p>
+          </div>
+        </div>
+        <div class="card">
+          <form class="form" id="supportForm">
+            <div class="inline">
+              <div class="field">
+                <label for="type">Request type</label>
+                <select id="type" name="type" required>
+                  <option value="feedback">Feedback</option>
+                  <option value="complaint">Complaint</option>
+                  <option value="requirement">Requirement</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="name">Full name</label>
+                <input id="name" name="name" required placeholder="Your name">
+              </div>
+            </div>
+            <div class="inline">
+              <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required></div>
+              <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" placeholder="+91..."></div>
+            </div>
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" required placeholder="Tell us what happened or what you need."></textarea>
+            </div>
+            <button class="btn" type="submit">Send support request</button>
+            <p class="helper">This writes to the <strong>support_requests</strong> table in Supabase.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="grid grid-2">
+      <div>
+        <div class="brand" style="margin-bottom:12px;">
+          <span class="brand-mark">D</span>
+          <span>Drifts AI</span>
+        </div>
+        <p class="muted">A modern software selling platform for digital products, services, and custom requirements.</p>
+      </div>
+      <div class="badges" style="justify-content:flex-end; align-items:start;">
+        <a class="chip" href="/privacy.html">Privacy Policy</a>
+        <a class="chip" href="/terms.html">Terms & Conditions</a>
+      </div>
+    </div>
+    <p style="margin-top:18px;">© 2026 Drifts AI. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <script type="module">
+    import { setActiveNav, initThemeToggle, initMobileMenu, currencyButtons, setSeoMeta, toast } from '/assets/js/shared.js';
+    import { supabase } from '/assets/js/supabaseClient.js';
+    setActiveNav(); initThemeToggle(); initMobileMenu(); currencyButtons();
+    setSeoMeta({ title: 'Support — Drifts AI', description: 'Submit feedback, complaints, or a new requirement through the Drifts AI support page.', path: '/support.html' });
+
+    const form = document.getElementById('supportForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = Object.fromEntries(new FormData(form).entries());
+      const button = form.querySelector('button');
+      button.disabled = true;
+      button.textContent = 'Sending...';
+      try {
+        const { error } = await supabase.from('support_requests').insert([{
+          request_type: payload.type,
+          full_name: payload.name,
+          email: payload.email,
+          phone: payload.phone || null,
+          message: payload.message
+        }]);
+        if (error) throw error;
+        form.reset();
+        toast('Support request sent successfully.');
+      } catch (err) {
+        console.error(err);
+        toast(err.message || 'Could not submit support request.', 'error');
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Send support request';
+      }
+    });
+  </script>
+
+</body>
+</html>

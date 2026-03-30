@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Products — Drifts AI</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Explore all uploaded software products with screenshots, pricing, and live INR/USD conversion.">
+<meta name="theme-color" content="#5b5dff">
+<link rel="canonical" href="https://driftsai.com/products.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Products — Drifts AI">
+<meta property="og:description" content="Explore all uploaded software products with screenshots, pricing, and live INR/USD conversion.">
+<meta property="og:url" content="https://driftsai.com/products.html">
+<meta property="og:image" content="https://driftsai.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Products — Drifts AI">
+<meta name="twitter:description" content="Explore all uploaded software products with screenshots, pricing, and live INR/USD conversion.">
+<link rel="icon" href="/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/assets/css/styles.css">
+
+
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <nav class="nav">
+      <a class="brand" href="/index.html" aria-label="Drifts AI home">
+        <span class="brand-mark">D</span>
+        <span>Drifts AI</span>
+      </a>
+      <button class="btn-outline nav-toggle" data-menu-toggle aria-expanded="false">Menu</button>
+      <div class="nav-links" data-menu>
+        <a data-nav href="/index.html">Home</a>
+        <a data-nav href="/about.html">About</a>
+        <a data-nav href="/products.html">Products</a>
+        <a data-nav href="/support.html">Support</a>
+        <a data-nav href="/inquiries.html">Inquiries</a>
+        <a data-nav href="/admin.html">Admin</a>
+      </div>
+      <div class="nav-actions">
+        <button class="toggle" data-theme-toggle type="button">Dark</button>
+        <button class="btn-outline" data-currency="INR" type="button">INR</button>
+        <button class="btn-outline" data-currency="USD" type="button">USD</button>
+        <a class="btn" href="/products.html">View Products</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+  <main>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h1>Products</h1>
+            <p>Browse all published products with screenshots, descriptions, and live currency pricing.</p>
+          </div>
+          <div class="badges">
+            <button class="chip active" data-currency="INR" type="button">INR</button>
+            <button class="chip" data-currency="USD" type="button">USD</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:18px;">
+          <div class="inline">
+            <div class="field">
+              <label for="search">Search</label>
+              <input id="search" placeholder="Search product name, category, or feature">
+            </div>
+            <div class="field">
+              <label for="category">Category</label>
+              <select id="category">
+                <option value="all">All</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div id="productGrid" class="grid grid-3"></div>
+      </div>
+    </section>
+
+  </main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="grid grid-2">
+      <div>
+        <div class="brand" style="margin-bottom:12px;">
+          <span class="brand-mark">D</span>
+          <span>Drifts AI</span>
+        </div>
+        <p class="muted">A modern software selling platform for digital products, services, and custom requirements.</p>
+      </div>
+      <div class="badges" style="justify-content:flex-end; align-items:start;">
+        <a class="chip" href="/privacy.html">Privacy Policy</a>
+        <a class="chip" href="/terms.html">Terms & Conditions</a>
+      </div>
+    </div>
+    <p style="margin-top:18px;">© 2026 Drifts AI. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <script type="module">
+    import { setActiveNav, initThemeToggle, initMobileMenu, currencyButtons, setSeoMeta, getPreferredCurrency, getFxRates, convertAmount, formatMoney, showLoading, escapeHtml, toast } from '/assets/js/shared.js';
+    import { supabase } from '/assets/js/supabaseClient.js';
+    import { CONFIG } from '/assets/js/config.js';
+    setActiveNav(); initThemeToggle(); initMobileMenu(); currencyButtons();
+    setSeoMeta({ title: 'Products — Drifts AI', description: 'Explore all uploaded software products with screenshots, pricing, and live INR/USD conversion.', path: '/products.html' });
+
+    const grid = document.getElementById('productGrid');
+    const search = document.getElementById('search');
+    const category = document.getElementById('category');
+    const state = { products: [], rates: null, currency: getPreferredCurrency() };
+
+    function productCard(product) {
+      const shots = Array.isArray(product.screenshots) ? product.screenshots : [];
+      const first = shots[0] || product.hero_image || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80';
+      const priceInr = formatMoney(product.price_inr, 'INR');
+      const priceUsd = formatMoney(product.price_usd || convertAmount(product.price_inr, 'INR', 'USD', state.rates), 'USD');
+      const gallery = shots.slice(0, 4).map((src) => `<img src="${escapeHtml(src)}" alt="${escapeHtml(product.name)} screenshot">`).join('');
+      return `
+        <article class="card">
+          <div class="product-media">
+            <img src="${escapeHtml(first)}" alt="${escapeHtml(product.name)}">
+          </div>
+          <div class="badges" style="margin:12px 0 8px;">
+            <span class="pill">${escapeHtml(product.category || 'Software')}</span>
+            <span class="pill">${escapeHtml(product.status || 'Live')}</span>
+          </div>
+          <h3>${escapeHtml(product.name)}</h3>
+          <p>${escapeHtml(product.short_description || product.description || '')}</p>
+          <div class="price">${state.currency === 'USD' ? priceUsd : priceInr}<small> / license</small></div>
+          <div class="product-gallery">${gallery}</div>
+          <div class="badges" style="margin-top:12px;">
+            <a class="btn-outline" href="${escapeHtml(product.demo_url || '#')}" target="_blank" rel="noopener">Demo</a>
+            <button class="btn" data-buy="${escapeHtml(product.id)}" type="button">Buy now</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function render(list) {
+      const filtered = list.filter((p) => {
+        const q = search.value.trim().toLowerCase();
+        const cat = category.value;
+        const matchesQuery = !q || [p.name, p.category, p.description, p.short_description, ...(p.features || [])].join(' ').toLowerCase().includes(q);
+        const matchesCategory = cat === 'all' || (p.category || '').toLowerCase() === cat.toLowerCase();
+        return matchesQuery && matchesCategory;
+      });
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="card" style="grid-column:1/-1;">No products found.</div>`;
+        return;
+      }
+      grid.innerHTML = filtered.map(productCard).join('');
+      grid.querySelectorAll('[data-buy]').forEach((btn) => {
+        btn.addEventListener('click', () => checkout(state.products.find((p) => p.id === btn.dataset.buy)));
+      });
+    }
+
+    async function checkout(product) {
+      try {
+        const currency = state.currency;
+        const amountValue = currency === 'USD'
+          ? Math.round(convertAmount(product.price_inr, 'INR', 'USD', state.rates) * 100)
+          : Math.round(Number(product.price_inr) * 100);
+        const orderPayload = {
+          amount: amountValue,
+          currency,
+          receipt: `rcpt_${product.id.slice(0,8)}_${Date.now()}`,
+          notes: { product_id: product.id, product_name: product.name }
+        };
+        const res = await fetch('/api/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderPayload)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Could not create order');
+
+        const options = {
+          key: data.keyId || CONFIG.razorpayKeyId,
+          amount: data.amount,
+          currency: data.currency,
+          name: CONFIG.siteName,
+          description: product.name,
+          order_id: data.orderId,
+          handler: async function (response) {
+            const verifyRes = await fetch('/api/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                ...response,
+                productId: product.id,
+                productName: product.name,
+                amount: data.amount,
+                currency: data.currency
+              })
+            });
+            const verifyData = await verifyRes.json();
+            if (!verifyRes.ok || !verifyData.verified) throw new Error(verifyData.error || 'Payment verification failed');
+            toast('Payment verified successfully.');
+          },
+          theme: { color: '#5b5dff' }
+        };
+        if (!window.Razorpay) throw new Error('Razorpay script is missing.');
+        new window.Razorpay(options).open();
+      } catch (err) {
+        console.error(err);
+        toast(err.message || 'Checkout failed', 'error');
+      }
+    }
+
+    async function init() {
+      showLoading(grid, 'Loading products...');
+      state.rates = await getFxRates();
+      const { data, error } = await supabase.from('products').select('*').eq('is_active', true).order('created_at', { ascending: false });
+      if (error) throw error;
+      state.products = data || [];
+      const cats = [...new Set(state.products.map((p) => p.category).filter(Boolean))];
+      category.insertAdjacentHTML('beforeend', cats.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join(''));
+      render(state.products);
+    }
+
+    search.addEventListener('input', () => render(state.products));
+    category.addEventListener('change', () => render(state.products));
+    document.addEventListener('currencychange', (e) => {
+      state.currency = e.detail.currency;
+      render(state.products);
+    });
+
+    init().catch((err) => {
+      console.error(err);
+      grid.innerHTML = `<div class="card" style="grid-column:1/-1;">${escapeHtml(err.message || 'Failed to load products')}</div>`;
+    });
+  </script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+</body>
+</html>

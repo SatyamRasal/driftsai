@@ -1,0 +1,17 @@
+[
+  {
+    "name": "AI Content Suite",
+    "slug": "ai-content-suite",
+    "category": "SaaS",
+    "status": "Live",
+    "short_description": "Generate landing pages, emails, and product copy.",
+    "description": "A premium AI writing toolkit for creators and startups.",
+    "price_inr": 4999,
+    "price_usd": 59,
+    "demo_url": "https://example.com",
+    "hero_image": "https://images.unsplash.com/photo-1555952494-efd681c7e3f9?auto=format&fit=crop&w=1200&q=80",
+    "screenshots": [],
+    "features": ["Copy generation", "Tone control", "SEO prompts"],
+    "is_active": true
+  }
+]

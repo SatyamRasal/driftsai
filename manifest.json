@@ -1,0 +1,9 @@
+{
+  "name": "Drifts AI",
+  "short_name": "DriftsAI",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0b1220",
+  "theme_color": "#5b5dff",
+  "icons": []
+}

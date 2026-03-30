@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Inquiries — Drifts AI</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Share custom requirements and budget estimates with the Drifts AI team.">
+<meta name="theme-color" content="#5b5dff">
+<link rel="canonical" href="https://driftsai.com/inquiries.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Inquiries — Drifts AI">
+<meta property="og:description" content="Share custom requirements and budget estimates with the Drifts AI team.">
+<meta property="og:url" content="https://driftsai.com/inquiries.html">
+<meta property="og:image" content="https://driftsai.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Inquiries — Drifts AI">
+<meta name="twitter:description" content="Share custom requirements and budget estimates with the Drifts AI team.">
+<link rel="icon" href="/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/assets/css/styles.css">
+
+
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <nav class="nav">
+      <a class="brand" href="/index.html" aria-label="Drifts AI home">
+        <span class="brand-mark">D</span>
+        <span>Drifts AI</span>
+      </a>
+      <button class="btn-outline nav-toggle" data-menu-toggle aria-expanded="false">Menu</button>
+      <div class="nav-links" data-menu>
+        <a data-nav href="/index.html">Home</a>
+        <a data-nav href="/about.html">About</a>
+        <a data-nav href="/products.html">Products</a>
+        <a data-nav href="/support.html">Support</a>
+        <a data-nav href="/inquiries.html">Inquiries</a>
+        <a data-nav href="/admin.html">Admin</a>
+      </div>
+      <div class="nav-actions">
+        <button class="toggle" data-theme-toggle type="button">Dark</button>
+        <button class="btn-outline" data-currency="INR" type="button">INR</button>
+        <button class="btn-outline" data-currency="USD" type="button">USD</button>
+        <a class="btn" href="/products.html">View Products</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+  <main>
+
+    <section class="section">
+      <div class="container grid grid-2">
+        <div class="card">
+          <span class="badge">Custom work</span>
+          <h1>Have a new requirement?</h1>
+          <p>Tell us what you want built, your budget range, and your target timeline. The inquiry gets stored for CRM follow-up.</p>
+          <div class="panel">
+            <h3>What to include</h3>
+            <p>Scope, audience, must-have features, budget, and deadline.</p>
+          </div>
+        </div>
+        <div class="card">
+          <form class="form" id="inquiryForm">
+            <div class="inline">
+              <div class="field"><label for="name">Full name</label><input id="name" name="name" required></div>
+              <div class="field"><label for="company">Company</label><input id="company" name="company" placeholder="Optional"></div>
+            </div>
+            <div class="inline">
+              <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required></div>
+              <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" placeholder="+91..."></div>
+            </div>
+            <div class="inline">
+              <div class="field">
+                <label for="budget">Budget</label>
+                <input id="budget" name="budget" type="number" min="0" step="0.01" required placeholder="1000">
+              </div>
+              <div class="field">
+                <label for="currency">Currency</label>
+                <select id="currency" name="currency">
+                  <option value="INR">INR</option>
+                  <option value="USD">USD</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="requirement">Requirement</label>
+              <textarea id="requirement" name="requirement" required placeholder="Describe what you want to build."></textarea>
+            </div>
+            <button class="btn" type="submit">Submit inquiry</button>
+            <p class="helper">This writes to the <strong>inquiries</strong> table in Supabase.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="grid grid-2">
+      <div>
+        <div class="brand" style="margin-bottom:12px;">
+          <span class="brand-mark">D</span>
+          <span>Drifts AI</span>
+        </div>
+        <p class="muted">A modern software selling platform for digital products, services, and custom requirements.</p>
+      </div>
+      <div class="badges" style="justify-content:flex-end; align-items:start;">
+        <a class="chip" href="/privacy.html">Privacy Policy</a>
+        <a class="chip" href="/terms.html">Terms & Conditions</a>
+      </div>
+    </div>
+    <p style="margin-top:18px;">© 2026 Drifts AI. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <script type="module">
+    import { setActiveNav, initThemeToggle, initMobileMenu, currencyButtons, setSeoMeta, toast } from '/assets/js/shared.js';
+    import { supabase } from '/assets/js/supabaseClient.js';
+    setActiveNav(); initThemeToggle(); initMobileMenu(); currencyButtons();
+    setSeoMeta({ title: 'Inquiries — Drifts AI', description: 'Share custom requirements and budget estimates with the Drifts AI team.', path: '/inquiries.html' });
+
+    const form = document.getElementById('inquiryForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = Object.fromEntries(new FormData(form).entries());
+      const button = form.querySelector('button');
+      button.disabled = true;
+      button.textContent = 'Submitting...';
+      try {
+        const { error } = await supabase.from('inquiries').insert([{
+          full_name: payload.name,
+          company: payload.company || null,
+          email: payload.email,
+          phone: payload.phone || null,
+          budget: payload.budget ? Number(payload.budget) : null,
+          currency: payload.currency || 'INR',
+          requirement: payload.requirement
+        }]);
+        if (error) throw error;
+        form.reset();
+        toast('Inquiry submitted successfully.');
+      } catch (err) {
+        console.error(err);
+        toast(err.message || 'Could not submit inquiry.', 'error');
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Submit inquiry';
+      }
+    });
+  </script>
+
+</body>
+</html>

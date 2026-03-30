@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Admin CRM — Drifts AI</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Admin CRM for Drifts AI: sign in, manage products, review support requests, and track inquiries.">
+<meta name="theme-color" content="#5b5dff">
+<link rel="canonical" href="https://driftsai.com/admin.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Admin CRM — Drifts AI">
+<meta property="og:description" content="Admin CRM for Drifts AI: sign in, manage products, review support requests, and track inquiries.">
+<meta property="og:url" content="https://driftsai.com/admin.html">
+<meta property="og:image" content="https://driftsai.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Admin CRM — Drifts AI">
+<meta name="twitter:description" content="Admin CRM for Drifts AI: sign in, manage products, review support requests, and track inquiries.">
+<link rel="icon" href="/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/assets/css/styles.css">
+
+
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <nav class="nav">
+      <a class="brand" href="/index.html" aria-label="Drifts AI home">
+        <span class="brand-mark">D</span>
+        <span>Drifts AI</span>
+      </a>
+      <button class="btn-outline nav-toggle" data-menu-toggle aria-expanded="false">Menu</button>
+      <div class="nav-links" data-menu>
+        <a data-nav href="/index.html">Home</a>
+        <a data-nav href="/about.html">About</a>
+        <a data-nav href="/products.html">Products</a>
+        <a data-nav href="/support.html">Support</a>
+        <a data-nav href="/inquiries.html">Inquiries</a>
+        <a data-nav href="/admin.html">Admin</a>
+      </div>
+      <div class="nav-actions">
+        <button class="toggle" data-theme-toggle type="button">Dark</button>
+        <button class="btn-outline" data-currency="INR" type="button">INR</button>
+        <button class="btn-outline" data-currency="USD" type="button">USD</button>
+        <a class="btn" href="/products.html">View Products</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+  <main>
+
+    <section class="section">
+      <div class="container">
+        <div id="authView" class="auth-box card">
+          <span class="badge">Admin access</span>
+          <h1>Sign in</h1>
+          <p>Use your Supabase admin account to access the CRM.</p>
+          <form class="form" id="loginForm">
+            <div class="field"><label for="email">Email</label><input id="email" type="email" required></div>
+            <div class="field"><label for="password">Password</label><input id="password" type="password" required></div>
+            <button class="btn" type="submit">Sign in</button>
+          </form>
+        </div>
+
+        <div id="dashboardView" class="hidden">
+          <div class="section-title">
+            <div>
+              <h1>CRM dashboard</h1>
+              <p>Manage products, leads, and payments from one place.</p>
+            </div>
+            <div class="badges">
+              <button class="btn-outline" id="logoutBtn" type="button">Sign out</button>
+            </div>
+          </div>
+
+          <div class="grid grid-4" id="statsRow"></div>
+
+          <div class="admin-layout" style="margin-top:18px;">
+            <aside class="panel admin-nav">
+              <button class="active" data-view="products" type="button">Products</button>
+              <button data-view="support" type="button">Support requests</button>
+              <button data-view="inquiries" type="button">Inquiries</button>
+              <button data-view="payments" type="button">Payments</button>
+            </aside>
+
+            <section class="card">
+              <div id="productsView">
+                <h2>Product manager</h2>
+                <form class="form" id="productForm">
+                  <input type="hidden" id="productId">
+                  <div class="inline">
+                    <div class="field"><label for="name">Product name</label><input id="name" required></div>
+                    <div class="field"><label for="slug">Slug</label><input id="slug" required placeholder="e.g. ai-content-suite"></div>
+                  </div>
+                  <div class="inline">
+                    <div class="field"><label for="category">Category</label><input id="category" required placeholder="Automation, SaaS, Plugin"></div>
+                    <div class="field"><label for="status">Status</label><select id="status"><option value="Live">Live</option><option value="Coming soon">Coming soon</option></select></div>
+                  </div>
+                  <div class="field"><label for="short_description">Short description</label><input id="short_description" required></div>
+                  <div class="field"><label for="description">Description</label><textarea id="description" required></textarea></div>
+                  <div class="inline">
+                    <div class="field"><label for="price_inr">Price INR</label><input id="price_inr" type="number" min="0" step="0.01" required></div>
+                    <div class="field"><label for="price_usd">Price USD</label><input id="price_usd" type="number" min="0" step="0.01"></div>
+                  </div>
+                  <div class="inline">
+                    <div class="field"><label for="demo_url">Demo URL</label><input id="demo_url" placeholder="https://..."></div>
+                    <div class="field"><label for="hero_image">Hero image URL</label><input id="hero_image" placeholder="https://..."></div>
+                  </div>
+                  <div class="field"><label for="screenshots">Screenshot URLs</label><textarea id="screenshots" placeholder="One URL per line"></textarea></div>
+                  <div class="field"><label for="features">Features</label><textarea id="features" placeholder="One feature per line"></textarea></div>
+                  <div class="badges">
+                    <button class="btn" type="submit">Save product</button>
+                    <button class="btn-outline" id="clearBtn" type="button">Clear</button>
+                  </div>
+                </form>
+
+                <div style="margin-top:22px; overflow:auto;">
+                  <table class="table">
+                    <thead><tr><th>Name</th><th>Price</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody id="productTable"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div id="supportView" class="hidden">
+                <h2>Support requests</h2>
+                <div id="supportList"></div>
+              </div>
+
+              <div id="inquiriesView" class="hidden">
+                <h2>Inquiries</h2>
+                <div id="inquiryList"></div>
+              </div>
+
+              <div id="paymentsView" class="hidden">
+                <h2>Payments</h2>
+                <div id="paymentList"></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="grid grid-2">
+      <div>
+        <div class="brand" style="margin-bottom:12px;">
+          <span class="brand-mark">D</span>
+          <span>Drifts AI</span>
+        </div>
+        <p class="muted">A modern software selling platform for digital products, services, and custom requirements.</p>
+      </div>
+      <div class="badges" style="justify-content:flex-end; align-items:start;">
+        <a class="chip" href="/privacy.html">Privacy Policy</a>
+        <a class="chip" href="/terms.html">Terms & Conditions</a>
+      </div>
+    </div>
+    <p style="margin-top:18px;">© 2026 Drifts AI. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <script type="module">
+    import { setActiveNav, initThemeToggle, initMobileMenu, currencyButtons, setSeoMeta, toast, escapeHtml, formatMoney } from '/assets/js/shared.js';
+    import { supabase } from '/assets/js/supabaseClient.js';
+    import { CONFIG } from '/assets/js/config.js';
+    setActiveNav(); initThemeToggle(); initMobileMenu(); currencyButtons();
+    setSeoMeta({ title: 'Admin CRM — Drifts AI', description: 'Admin CRM for Drifts AI: sign in, manage products, review support requests, and track inquiries.', path: '/admin.html' });
+
+    const authView = document.getElementById('authView');
+    const dashboardView = document.getElementById('dashboardView');
+    const loginForm = document.getElementById('loginForm');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const statsRow = document.getElementById('statsRow');
+    const productForm = document.getElementById('productForm');
+    const productTable = document.getElementById('productTable');
+    const supportList = document.getElementById('supportList');
+    const inquiryList = document.getElementById('inquiryList');
+    const paymentList = document.getElementById('paymentList');
+    const views = {
+      products: document.getElementById('productsView'),
+      support: document.getElementById('supportView'),
+      inquiries: document.getElementById('inquiriesView'),
+      payments: document.getElementById('paymentsView')
+    };
+
+    async function getSession() {
+      const { data } = await supabase.auth.getSession();
+      return data.session;
+    }
+
+    async function api(path, options = {}) {
+      const session = await getSession();
+      const headers = new Headers(options.headers || {});
+      headers.set('Content-Type', 'application/json');
+      if (session?.access_token) headers.set('Authorization', `Bearer ${session.access_token}`);
+      const res = await fetch(path, { ...options, headers });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Request failed');
+      return data;
+    }
+
+    function setView(name) {
+      document.querySelectorAll('[data-view]').forEach((btn) => btn.classList.toggle('active', btn.dataset.view === name));
+      Object.entries(views).forEach(([key, el]) => el.classList.toggle('hidden', key !== name));
+    }
+
+    document.querySelectorAll('[data-view]').forEach((btn) => btn.addEventListener('click', () => setView(btn.dataset.view)));
+    document.getElementById('clearBtn').addEventListener('click', () => productForm.reset());
+
+    function slugify(text) {
+      return text.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+
+    document.getElementById('name').addEventListener('input', (e) => {
+      const slug = document.getElementById('slug');
+      if (!slug.dataset.manual) slug.value = slugify(e.target.value);
+    });
+    document.getElementById('slug').addEventListener('input', (e) => {
+      e.target.dataset.manual = '1';
+    });
+
+    async function loadStats() {
+      const data = await api('/api/admin/analytics');
+      statsRow.innerHTML = `
+        <div class="panel"><strong style="font-size:1.8rem;">${data.products || 0}</strong><p>Published products</p></div>
+        <div class="panel"><strong style="font-size:1.8rem;">${data.supportRequests || 0}</strong><p>Support requests</p></div>
+        <div class="panel"><strong style="font-size:1.8rem;">${data.inquiries || 0}</strong><p>Inquiries</p></div>
+        <div class="panel"><strong style="font-size:1.8rem;">${data.payments || 0}</strong><p>Payment records</p></div>
+      `;
+    }
+
+    async function loadProducts() {
+      const data = await api('/api/admin/products');
+      productTable.innerHTML = data.products.map((p) => `
+        <tr>
+          <td><strong>${escapeHtml(p.name)}</strong><br><span class="muted">${escapeHtml(p.slug)}</span></td>
+          <td>${formatMoney(p.price_inr, 'INR')} / $${Number(p.price_usd || 0).toFixed(2)}</td>
+          <td><span class="pill">${escapeHtml(p.status || 'Live')}</span></td>
+          <td>
+            <button class="btn-outline" data-edit="${p.id}" type="button">Edit</button>
+            <button class="btn-outline" data-delete="${p.id}" type="button">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+      productTable.querySelectorAll('[data-edit]').forEach((btn) => btn.addEventListener('click', () => fillProduct(data.products.find((p) => p.id === btn.dataset.edit))));
+      productTable.querySelectorAll('[data-delete]').forEach((btn) => btn.addEventListener('click', () => deleteProduct(btn.dataset.delete)));
+    }
+
+    async function loadLeads() {
+      const data = await api('/api/admin/leads');
+      supportList.innerHTML = data.supportRequests.map(renderSupport).join('') || '<p class="muted">No support requests yet.</p>';
+      inquiryList.innerHTML = data.inquiries.map(renderInquiry).join('') || '<p class="muted">No inquiries yet.</p>';
+      paymentList.innerHTML = data.payments.map(renderPayment).join('') || '<p class="muted">No payments yet.</p>';
+    }
+
+    function renderSupport(x) {
+      return `<div class="panel" style="margin-bottom:12px;"><strong>${escapeHtml(x.full_name)}</strong> <span class="pill">${escapeHtml(x.request_type)}</span><p>${escapeHtml(x.message)}</p><p class="muted">${escapeHtml(x.email)}${x.phone ? ' • ' + escapeHtml(x.phone) : ''}</p></div>`;
+    }
+    function renderInquiry(x) {
+      return `<div class="panel" style="margin-bottom:12px;"><strong>${escapeHtml(x.full_name)}</strong> <span class="pill">${escapeHtml(x.currency || 'INR')} ${escapeHtml(String(x.budget || ''))}</span><p>${escapeHtml(x.requirement)}</p><p class="muted">${escapeHtml(x.email)}${x.company ? ' • ' + escapeHtml(x.company) : ''}</p></div>`;
+    }
+    function renderPayment(x) {
+      return `<div class="panel" style="margin-bottom:12px;"><strong>${escapeHtml(x.product_name || 'Order')}</strong> <span class="pill">${escapeHtml(x.currency || '')}</span><p>Status: ${escapeHtml(x.status || 'verified')}</p><p class="muted">${escapeHtml(x.customer_email || '')}</p></div>`;
+    }
+
+    function fillProduct(p) {
+      productForm.dataset.editId = p.id;
+      document.getElementById('name').value = p.name || '';
+      document.getElementById('slug').value = p.slug || '';
+      document.getElementById('category').value = p.category || '';
+      document.getElementById('status').value = p.status || 'Live';
+      document.getElementById('short_description').value = p.short_description || '';
+      document.getElementById('description').value = p.description || '';
+      document.getElementById('price_inr').value = p.price_inr ?? '';
+      document.getElementById('price_usd').value = p.price_usd ?? '';
+      document.getElementById('demo_url').value = p.demo_url || '';
+      document.getElementById('hero_image').value = p.hero_image || '';
+      document.getElementById('screenshots').value = Array.isArray(p.screenshots) ? p.screenshots.join('\n') : '';
+      document.getElementById('features').value = Array.isArray(p.features) ? p.features.join('\n') : '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm('Delete this product?')) return;
+      await api('/api/admin/products', { method: 'DELETE', body: JSON.stringify({ id }) });
+      toast('Product deleted.');
+      await refresh();
+    }
+
+    productForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const body = {
+        id: productForm.dataset.editId || undefined,
+        name: document.getElementById('name').value.trim(),
+        slug: document.getElementById('slug').value.trim(),
+        category: document.getElementById('category').value.trim(),
+        status: document.getElementById('status').value,
+        short_description: document.getElementById('short_description').value.trim(),
+        description: document.getElementById('description').value.trim(),
+        price_inr: Number(document.getElementById('price_inr').value || 0),
+        price_usd: Number(document.getElementById('price_usd').value || 0) || null,
+        demo_url: document.getElementById('demo_url').value.trim() || null,
+        hero_image: document.getElementById('hero_image').value.trim() || null,
+        screenshots: document.getElementById('screenshots').value.split('\n').map(s => s.trim()).filter(Boolean),
+        features: document.getElementById('features').value.split('\n').map(s => s.trim()).filter(Boolean),
+        is_active: true
+      };
+      try {
+        await api('/api/admin/products', { method: productForm.dataset.editId ? 'PUT' : 'POST', body: JSON.stringify(body) });
+        toast('Product saved.');
+        productForm.reset();
+        delete productForm.dataset.editId;
+        await refresh();
+      } catch (err) {
+        toast(err.message || 'Could not save product.', 'error');
+      }
+    });
+
+    async function refresh() {
+      await Promise.all([loadStats(), loadProducts(), loadLeads()]);
+    }
+
+    logoutBtn.addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      authView.classList.remove('hidden');
+      dashboardView.classList.add('hidden');
+      toast('Signed out.');
+    });
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      try {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        await boot();
+      } catch (err) {
+        toast(err.message || 'Sign in failed', 'error');
+      }
+    });
+
+    async function boot() {
+      const session = await getSession();
+      const email = String(session?.user?.email || '').toLowerCase();
+      const allowed = (CONFIG.adminEmails || []).map((x) => String(x).toLowerCase());
+      if (!session) {
+        authView.classList.remove('hidden');
+        dashboardView.classList.add('hidden');
+        return;
+      }
+      if (allowed.length && !allowed.includes(email)) {
+        await supabase.auth.signOut();
+        authView.classList.remove('hidden');
+        dashboardView.classList.add('hidden');
+        toast('This account is not in the admin allowlist.', 'error');
+        return;
+      }
+      authView.classList.add('hidden');
+      dashboardView.classList.remove('hidden');
+      await refresh();
+      setView('products');
+    }
+
+    supabase.auth.onAuthStateChange(async (event) => {
+      if (event === 'SIGNED_OUT') boot();
+    });
+
+    boot();
+  </script>
+
+</body>
+</html>
