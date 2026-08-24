@@ -12,7 +12,7 @@ git init
 git add .
 git commit -m "DriftsAI"
 git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/driftsai.git
+git remote add origin https://github.com/satyamrasal/driftsai.git
 git push -u origin main
 ```
 
