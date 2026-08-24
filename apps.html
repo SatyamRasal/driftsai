@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>All Apps — DriftsAI</title>
+  <meta name="description" content="Browse and download free software. APK, EXE, DMG files.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='12' fill='%234263eb'/><text x='24' y='34' text-anchor='middle' font-weight='900' font-size='28' fill='white'>D</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+  <nav class="nav"><div class="container nav-inner">
+    <a href="index.html" class="nav-logo"><div class="logo-icon">D</div>Drifts<span>AI</span></a>
+    <div class="nav-links"><a href="index.html">Home</a><a href="apps.html" class="active">Apps</a></div>
+    <div class="nav-social" id="navSocial"></div>
+    <button class="nav-mobile" onclick="document.getElementById('mobileMenu').classList.toggle('open')">☰</button>
+  </div><div class="mobile-menu" id="mobileMenu"><a href="index.html">Home</a><a href="apps.html">Apps</a></div></nav>
+
+  <main class="main"><div class="container" style="padding-top:20px">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="Search apps..." oninput="filterApps()">
+    </div>
+    <div class="chips" id="chips"></div>
+    <div id="appList"></div>
+  </div></main>
+  <footer class="footer" id="footer"></footer>
+</div>
+<script src="data.js"></script>
+<script>
+function fmt(n){if(!n)return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return n}
+function appCard(app){
+  return`<a href="app.html?id=${app.id}" class="app-card">
+    <div class="app-icon">${app.icon?`<img src="${app.icon}" alt="${app.name}" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=app-icon-placeholder>📦</div>'">`:'<div class="app-icon-placeholder">📦</div>'}</div>
+    <div class="app-info"><div class="app-name">${app.name}</div><div class="app-tagline">${app.tagline}</div>
+      <div class="app-meta"><span class="app-badge">${app.fileType}</span><span>${app.fileSize}</span>${app.rating?`<span>⭐ ${app.rating}</span>`:''}<span>⬇ ${fmt(app.downloads)}</span></div>
+    </div><div class="app-get">GET</div></a>`
+}
+
+let currentCat='All';
+const params=new URLSearchParams(location.search);
+if(params.get('category')) currentCat=params.get('category');
+
+function renderChips(){
+  const cats=['All',...new Set(APPS.map(a=>a.category))];
+  document.getElementById('chips').innerHTML=cats.map(c=>
+    `<button class="chip ${c===currentCat?'active':''}" onclick="currentCat='${c}';renderChips();renderList()">${c}</button>`
+  ).join('');
+}
+
+function renderList(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  let apps=APPS.filter(a=>currentCat==='All'||a.category===currentCat);
+  if(q) apps=apps.filter(a=>a.name.toLowerCase().includes(q)||a.tagline.toLowerCase().includes(q));
+  document.getElementById('appList').innerHTML=apps.length?
+    `<div class="app-list">${apps.map(appCard).join('')}</div>`:
+    '<div class="empty"><div class="empty-icon">📦</div><h3>No apps found</h3><p>Try a different category or search term.</p></div>';
+}
+
+function filterApps(){renderList()}
+
+// Social & footer
+document.getElementById('navSocial').innerHTML=`<a href="${SOCIAL.twitter.url}" target="_blank">𝕏</a><a href="${SOCIAL.instagram.url}" target="_blank">📷</a><a href="${SOCIAL.email.url}">✉</a>`;
+document.getElementById('footer').innerHTML=`<div class="container"><div class="footer-bottom">© ${new Date().getFullYear()} ${SITE.name}</div></div>`;
+
+renderChips();renderList();
+</script>
+</body>
+</html>

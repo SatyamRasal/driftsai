@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>App — DriftsAI</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='12' fill='%234263eb'/><text x='24' y='34' text-anchor='middle' font-weight='900' font-size='28' fill='white'>D</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+  <nav class="nav"><div class="container nav-inner">
+    <a href="index.html" class="nav-logo"><div class="logo-icon">D</div>Drifts<span>AI</span></a>
+    <div class="nav-links"><a href="index.html">Home</a><a href="apps.html">Apps</a></div>
+    <div class="nav-social" id="navSocial"></div>
+    <button class="nav-mobile" onclick="document.getElementById('mobileMenu').classList.toggle('open')">☰</button>
+  </div><div class="mobile-menu" id="mobileMenu"><a href="index.html">Home</a><a href="apps.html">Apps</a></div></nav>
+
+  <main class="main"><div class="container" style="padding-top:20px" id="content">Loading...</div></main>
+  <footer class="footer" id="footer"></footer>
+</div>
+<div class="toast" id="toast"></div>
+<script src="data.js"></script>
+<script>
+function fmt(n){if(!n)return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return n}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+
+const id=new URLSearchParams(location.search).get('id');
+const app=APPS.find(a=>a.id===id);
+
+if(!app){
+  document.getElementById('content').innerHTML='<div class="empty"><div class="empty-icon">😕</div><h3>App not found</h3><a href="apps.html" class="btn btn-primary" style="margin-top:16px">Browse Apps</a></div>';
+}else{
+  document.title=`${app.name} — DriftsAI`;
+  document.querySelector('meta[name="description"]')?.setAttribute('content',app.tagline);
+
+  document.getElementById('content').innerHTML=`
+    <a href="apps.html" class="back">← Apps</a>
+
+    <div class="app-header">
+      <div class="app-detail-icon">${app.icon?`<img src="${app.icon}" alt="${app.name}">`:'📦'}</div>
+      <div class="app-detail-info">
+        <h1>${app.name}</h1>
+        <div class="dev">${app.developer||'DriftsAI'}</div>
+        <div class="app-detail-meta">
+          <span class="app-badge" style="font-size:11px">${app.category}</span>
+          ${app.rating?`<span>⭐ ${app.rating}</span>`:''}
+          <span>⬇ ${fmt(app.downloads)} downloads</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="download-btn" onclick="startDownload()">
+      ⬇ Download ${app.fileType} — Free
+    </button>
+
+    <div class="info-bar">
+      <div class="info-item"><div class="info-label">Version</div><div class="info-value">${app.version}</div></div>
+      <div class="info-item"><div class="info-label">Size</div><div class="info-value">${app.fileSize}</div></div>
+      <div class="info-item"><div class="info-label">Type</div><div class="info-value">${app.fileType}</div></div>
+      <div class="info-item"><div class="info-label">Platform</div><div class="info-value">${app.platform.join(', ')}</div></div>
+    </div>
+
+    ${app.screenshots?.length?`
+    <div class="detail-section">
+      <h3>Screenshots</h3>
+      <div class="screenshots">${app.screenshots.map(s=>`<img src="${s}" alt="Screenshot" onerror="this.style.display='none'">`).join('')}</div>
+    </div>`:''}
+
+    <div class="detail-section">
+      <h3>About this app</h3>
+      <p>${app.description}</p>
+    </div>
+
+    ${app.whatsNew?`<div class="detail-section"><h3>What's New</h3><div class="card" style="padding:16px;background:var(--bg1)"><p style="font-size:13px">${app.whatsNew}</p></div></div>`:''}
+
+    ${app.features?.length?`<div class="detail-section"><h3>Features</h3><ul class="feature-list">${app.features.map(f=>`<li>${f}</li>`).join('')}</ul></div>`:''}
+
+    ${app.requirements?.length?`<div class="detail-section"><h3>Requirements</h3><ul class="feature-list">${app.requirements.map(r=>`<li>${r}</li>`).join('')}</ul></div>`:''}
+
+    <div class="detail-section">
+      <h3>App Info</h3>
+      <table class="info-table">
+        <tr><td>Developer</td><td>${app.developer||'DriftsAI'}</td></tr>
+        <tr><td>Category</td><td>${app.category}</td></tr>
+        <tr><td>Version</td><td>${app.version}</td></tr>
+        <tr><td>File Type</td><td>${app.fileType}</td></tr>
+        <tr><td>File Size</td><td>${app.fileSize}</td></tr>
+        <tr><td>Platform</td><td>${app.platform.join(', ')}</td></tr>
+        <tr><td>Downloads</td><td>${fmt(app.downloads)}</td></tr>
+      </table>
+    </div>
+
+    <!-- Contact Card (always visible) -->
+    <div class="contact-card" id="contactCard" style="margin-top:32px">
+      <div class="contact-header">
+        <h3>💬 Want the full version?</h3>
+        <p>Contact me to purchase or ask questions</p>
+      </div>
+      <div class="contact-options">
+        <a href="${SOCIAL.twitter.url}" target="_blank" class="contact-link">
+          <div class="contact-icon" style="background:#000">𝕏</div>
+          <div><div class="contact-label">DM on X (Twitter)</div><div class="contact-handle">${SOCIAL.twitter.handle}</div></div>
+          <div class="contact-arrow">→</div>
+        </a>
+        <a href="${SOCIAL.instagram.url}" target="_blank" class="contact-link">
+          <div class="contact-icon" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)">📷</div>
+          <div><div class="contact-label">DM on Instagram</div><div class="contact-handle">${SOCIAL.instagram.handle}</div></div>
+          <div class="contact-arrow">→</div>
+        </a>
+        <a href="${SOCIAL.email.url}" class="contact-link">
+          <div class="contact-icon" style="background:var(--blue)">✉</div>
+          <div><div class="contact-label">Send Email</div><div class="contact-handle">${SOCIAL.email.handle}</div></div>
+          <div class="contact-arrow">→</div>
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+function startDownload(){
+  if(!app.downloadUrl || app.downloadUrl.includes('YOUR_FILE_ID_HERE')){
+    showToast('⚠ Download link not set yet');
+    return;
+  }
+  // Open download in new tab
+  window.open(app.downloadUrl,'_blank');
+  showToast('✅ Download started!');
+
+  // Highlight contact card
+  const card=document.getElementById('contactCard');
+  card.style.boxShadow='0 0 0 3px var(--blue), var(--shadow-lg)';
+  card.querySelector('.contact-header h3').textContent='🎉 Enjoying the app?';
+  card.querySelector('.contact-header p').textContent='Get the premium version or reach out for support!';
+  card.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+document.getElementById('navSocial').innerHTML=`<a href="${SOCIAL.twitter.url}" target="_blank">𝕏</a><a href="${SOCIAL.instagram.url}" target="_blank">📷</a><a href="${SOCIAL.email.url}">✉</a>`;
+document.getElementById('footer').innerHTML=`<div class="container"><div class="footer-bottom">© ${new Date().getFullYear()} ${SITE.name}</div></div>`;
+</script>
+</body>
+</html>

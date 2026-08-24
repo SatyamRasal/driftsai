@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin — DriftsAI</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+  <nav class="nav"><div class="container nav-inner">
+    <a href="index.html" class="nav-logo"><div class="logo-icon">D</div>Drifts<span>AI</span></a>
+    <div class="nav-links"><a href="index.html">Store</a><a href="admin.html" class="active">Admin</a></div>
+  </div></nav>
+
+  <main class="main">
+    <div class="container">
+      <!-- Login -->
+      <div id="loginView" class="admin-login">
+        <div class="logo-icon" style="width:48px;height:48px;font-size:22px;margin:0 auto 16px">D</div>
+        <h1>Admin Login</h1>
+        <p>DriftsAI Dashboard</p>
+        <div class="card" style="text-align:left">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="loginEmail" class="form-input" placeholder="admin@driftsai.com">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" class="form-input" placeholder="••••••••">
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doLogin()">Sign In</button>
+          <p id="loginError" style="color:var(--rose);font-size:13px;margin-top:12px;text-align:center;display:none"></p>
+        </div>
+      </div>
+
+      <!-- Admin Panel -->
+      <div id="adminView" style="display:none" class="admin-panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+          <div>
+            <h1 style="font-size:24px;font-weight:800">Your Apps</h1>
+            <p style="color:var(--ink2);font-size:14px">${APPS?.length || 0} apps in your store</p>
+          </div>
+          <button class="btn btn-primary" onclick="showAddForm()">+ Add New App</button>
+        </div>
+
+        <!-- Current Apps -->
+        <div id="currentApps"></div>
+
+        <!-- Add/Edit Form -->
+        <div id="formSection" style="display:none;margin-top:32px">
+          <h2 id="formTitle" style="font-size:20px;font-weight:700;margin-bottom:16px">Add New App</h2>
+          <div class="card">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div class="form-group" style="grid-column:span 2"><label>App Name *</label><input id="f_name" class="form-input" placeholder="My Cool App"></div>
+              <div class="form-group" style="grid-column:span 2"><label>Tagline *</label><input id="f_tagline" class="form-input" placeholder="Short description"></div>
+              <div class="form-group" style="grid-column:span 2"><label>Description *</label><textarea id="f_description" class="form-input" rows="4" placeholder="Full app description..."></textarea></div>
+              <div class="form-group"><label>Category *</label>
+                <select id="f_category" class="form-input">
+                  <option>AI Tools</option><option>Developer Tools</option><option>Productivity</option><option>Design</option><option>Security</option><option>Games</option><option>Utilities</option><option>Entertainment</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Version</label><input id="f_version" class="form-input" value="1.0.0"></div>
+              <div class="form-group"><label>File Type *</label>
+                <select id="f_fileType" class="form-input">
+                  <option>APK</option><option>EXE</option><option>DMG</option><option>DEB</option><option>ZIP</option><option>MSI</option><option>IPA</option>
+                </select>
+              </div>
+              <div class="form-group"><label>File Size</label><input id="f_fileSize" class="form-input" placeholder="24 MB"></div>
+              <div class="form-group" style="grid-column:span 2">
+                <label>Google Drive Download URL *</label>
+                <input id="f_downloadUrl" class="form-input" placeholder="https://drive.google.com/uc?export=download&id=YOUR_FILE_ID">
+                <small style="color:var(--ink3);font-size:11px;margin-top:4px;display:block">Upload to Google Drive → Share → Anyone with link → Copy ID → Paste above</small>
+              </div>
+              <div class="form-group"><label>App Icon URL</label><input id="f_icon" class="form-input" placeholder="https://..."></div>
+              <div class="form-group"><label>Platform</label><input id="f_platform" class="form-input" placeholder="Android, Windows"></div>
+              <div class="form-group" style="grid-column:span 2"><label>Features (one per line)</label><textarea id="f_features" class="form-input" rows="3" placeholder="Feature 1&#10;Feature 2"></textarea></div>
+              <div class="form-group" style="grid-column:span 2"><label>What's New</label><textarea id="f_whatsNew" class="form-input" rows="2" placeholder="• Bug fixes&#10;• New features"></textarea></div>
+              <div class="form-group" style="grid-column:span 2"><label>Screenshots URLs (one per line)</label><textarea id="f_screenshots" class="form-input" rows="2" placeholder="https://screenshot1.png&#10;https://screenshot2.png"></textarea></div>
+              <div class="form-group" style="grid-column:span 2"><label>Requirements (one per line)</label><textarea id="f_requirements" class="form-input" rows="2" placeholder="Android 8.0+&#10;100 MB storage"></textarea></div>
+              <div class="form-group"><label>Developer</label><input id="f_developer" class="form-input" value="DriftsAI"></div>
+              <div class="form-group" style="display:flex;align-items:center;gap:8px;margin-top:24px">
+                <input type="checkbox" id="f_featured"> <label for="f_featured" style="margin:0;cursor:pointer">Featured on homepage</label>
+              </div>
+            </div>
+            <div style="margin-top:20px;display:flex;gap:8px">
+              <button class="btn btn-primary" onclick="generateCode()">✅ Generate Code</button>
+              <button class="btn btn-ghost" onclick="document.getElementById('formSection').style.display='none'">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generated Code -->
+        <div id="codeSection" style="display:none;margin-top:24px">
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:8px">📋 Copy this into your data.js file</h3>
+          <p style="color:var(--ink2);font-size:13px;margin-bottom:8px">Add this inside the <code>APPS = [</code> array in <strong>data.js</strong>, then push to GitHub.</p>
+          <div class="code-output" id="codeOutput"></div>
+          <button class="copy-btn" onclick="copyCode()">📋 Copy to Clipboard</button>
+        </div>
+
+        <!-- How-to Guide -->
+        <div class="card" style="margin-top:32px;background:var(--blue-bg);border-color:var(--blue-l)">
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:8px">📖 How to Add an App</h3>
+          <ol style="padding-left:20px;font-size:14px;color:var(--ink1);line-height:2">
+            <li>Upload your APK/EXE to <strong>Google Drive</strong></li>
+            <li>Right-click → <strong>Share</strong> → <strong>Anyone with the link</strong></li>
+            <li>Copy the file ID from the URL</li>
+            <li>Fill the form above → click <strong>Generate Code</strong></li>
+            <li>Open <strong>data.js</strong> in your repo</li>
+            <li>Paste the code inside the <code>APPS</code> array</li>
+            <li>Commit & push → Netlify auto-deploys in 30 seconds ✅</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+<script src="data.js"></script>
+<script>
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+
+function doLogin(){
+  const e=document.getElementById('loginEmail').value.trim();
+  const p=document.getElementById('loginPassword').value;
+  if(e===ADMIN_EMAIL&&p===ADMIN_PASSWORD){
+    document.getElementById('loginView').style.display='none';
+    document.getElementById('adminView').style.display='block';
+    renderApps();
+  }else{
+    const err=document.getElementById('loginError');
+    err.textContent='Invalid email or password';
+    err.style.display='block';
+  }
+}
+
+// Enter key login
+document.getElementById('loginPassword').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+
+function renderApps(){
+  document.getElementById('currentApps').innerHTML=APPS.length?APPS.map((a,i)=>
+    `<div class="admin-app">
+      <div style="width:40px;height:40px;border-radius:10px;background:var(--bg2);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+        ${a.icon?`<img src="${a.icon}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`:'📦'}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div class="app-name">${a.name}</div>
+        <div style="font-size:12px;color:var(--ink3)">${a.category} · ${a.fileType} · ${a.fileSize}</div>
+      </div>
+      <a href="app.html?id=${a.id}" target="_blank" class="btn btn-edit" style="font-size:11px">View</a>
+    </div>`
+  ).join(''):'<div class="empty"><div class="empty-icon">📦</div><h3>No apps yet</h3><p>Click "Add New App" to get started</p></div>';
+}
+
+function showAddForm(){
+  document.getElementById('formSection').style.display='block';
+  document.getElementById('codeSection').style.display='none';
+  document.getElementById('formSection').scrollIntoView({behavior:'smooth'});
+}
+
+function generateCode(){
+  const name=document.getElementById('f_name').value.trim();
+  const tagline=document.getElementById('f_tagline').value.trim();
+  if(!name||!tagline){showToast('⚠ Name and tagline are required');return}
+
+  const slug=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+  const features=document.getElementById('f_features').value.trim().split('\n').filter(Boolean);
+  const screenshots=document.getElementById('f_screenshots').value.trim().split('\n').filter(Boolean);
+  const requirements=document.getElementById('f_requirements').value.trim().split('\n').filter(Boolean);
+  const platforms=document.getElementById('f_platform').value.split(',').map(s=>s.trim()).filter(Boolean);
+
+  const obj={
+    id: slug,
+    name: name,
+    tagline: tagline,
+    description: document.getElementById('f_description').value.trim(),
+    category: document.getElementById('f_category').value,
+    developer: document.getElementById('f_developer').value.trim()||'DriftsAI',
+    version: document.getElementById('f_version').value.trim()||'1.0.0',
+    fileType: document.getElementById('f_fileType').value,
+    fileSize: document.getElementById('f_fileSize').value.trim(),
+    platform: platforms,
+    downloadUrl: document.getElementById('f_downloadUrl').value.trim(),
+    icon: document.getElementById('f_icon').value.trim(),
+    screenshots: screenshots,
+    features: features,
+    requirements: requirements,
+    whatsNew: document.getElementById('f_whatsNew').value.trim(),
+    isFeatured: document.getElementById('f_featured').checked,
+    downloads: 0,
+    rating: 0,
+  };
+
+  const code=JSON.stringify(obj,null,2).replace(/"(\w+)":/g,'$1:');
+  document.getElementById('codeOutput').textContent=code+',';
+  document.getElementById('codeSection').style.display='block';
+  document.getElementById('codeSection').scrollIntoView({behavior:'smooth'});
+  showToast('✅ Code generated! Copy it into data.js');
+}
+
+function copyCode(){
+  const code=document.getElementById('codeOutput').textContent;
+  navigator.clipboard.writeText(code).then(()=>showToast('📋 Copied!')).catch(()=>showToast('⚠ Copy manually'));
+}
+</script>
+</body>
+</html>

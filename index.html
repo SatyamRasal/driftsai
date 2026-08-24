@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DriftsAI — Free Software Downloads</title>
+  <meta name="description" content="Download free APK, EXE, DMG software. No account needed — instant downloads.">
+  <meta property="og:title" content="DriftsAI — Free Software Downloads">
+  <meta property="og:description" content="Download free software. APK, EXE & more.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='12' fill='%234263eb'/><text x='24' y='34' text-anchor='middle' font-weight='900' font-size='28' fill='white'>D</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo"><div class="logo-icon">D</div>Drifts<span>AI</span></a>
+      <div class="nav-links">
+        <a href="index.html" class="active">Home</a>
+        <a href="apps.html">Apps</a>
+      </div>
+      <div class="nav-social" id="navSocial"></div>
+      <button class="nav-mobile" onclick="document.getElementById('mobileMenu').classList.toggle('open')">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="index.html">Home</a>
+      <a href="apps.html">Apps</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="container">
+      <!-- Featured Banner -->
+      <div id="heroBanner"></div>
+
+      <!-- Search -->
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Search apps, tools & software..." oninput="filterApps()">
+      </div>
+
+      <!-- Categories -->
+      <div class="categories" id="catGrid"></div>
+
+      <!-- New Releases -->
+      <div class="section" id="newSection"></div>
+
+      <!-- Top Downloads -->
+      <div class="section" id="topSection"></div>
+
+      <!-- Featured Apps -->
+      <div class="section" id="featuredSection"></div>
+    </div>
+  </main>
+
+  <footer class="footer" id="footer"></footer>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="data.js"></script>
+<script>
+// ── Helpers ──
+function fmt(n){if(!n)return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return n}
+function stars(r){let s='';for(let i=1;i<=5;i++)s+=i<=Math.round(r)?'⭐':'';return s}
+
+function appCard(app){
+  return`<a href="app.html?id=${app.id}" class="app-card">
+    <div class="app-icon">${app.icon?`<img src="${app.icon}" alt="${app.name}" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=app-icon-placeholder>📦</div>'">`:'<div class="app-icon-placeholder">📦</div>'}</div>
+    <div class="app-info">
+      <div class="app-name">${app.name}</div>
+      <div class="app-tagline">${app.tagline}</div>
+      <div class="app-meta">
+        <span class="app-badge">${app.fileType}</span>
+        <span>${app.fileSize}</span>
+        ${app.rating?`<span>⭐ ${app.rating}</span>`:''}
+        <span>⬇ ${fmt(app.downloads)}</span>
+      </div>
+    </div>
+    <div class="app-get">GET</div>
+  </a>`
+}
+
+// ── Render ──
+function render(){
+  // Social nav
+  document.getElementById('navSocial').innerHTML=
+    `<a href="${SOCIAL.twitter.url}" target="_blank" title="Twitter">𝕏</a>
+     <a href="${SOCIAL.instagram.url}" target="_blank" title="Instagram">📷</a>
+     <a href="${SOCIAL.email.url}" title="Email">✉</a>`;
+
+  // Hero
+  const feat=APPS.find(a=>a.isFeatured);
+  if(feat) document.getElementById('heroBanner').innerHTML=
+    `<a href="app.html?id=${feat.id}" class="hero">
+      <div class="hero-icon">${feat.icon?`<img src="${feat.icon}" alt="">`:'📦'}</div>
+      <div>
+        <div class="hero-badge">✨ Featured</div>
+        <h2>${feat.name}</h2>
+        <p>${feat.tagline}</p>
+        <div class="hero-btn">⬇ Get App</div>
+        <div class="hero-meta">${feat.fileSize} · ${feat.fileType} · ${feat.platform.join(', ')}</div>
+      </div>
+    </a>`;
+
+  // Categories
+  document.getElementById('catGrid').innerHTML=CATEGORIES.map(c=>
+    `<a href="apps.html?category=${encodeURIComponent(c.id)}" class="cat-card">
+      <div class="cat-icon" style="background:${c.color}15;color:${c.color}">${c.icon}</div>
+      <div class="cat-label">${c.id.replace(' Tools','')}</div>
+    </a>`
+  ).join('');
+
+  // New
+  const newApps=APPS.slice().sort((a,b)=>b.id.localeCompare(a.id)).slice(0,6);
+  document.getElementById('newSection').innerHTML=
+    `<div class="section-head"><div class="section-title">🕐 New Releases</div><a href="apps.html" class="section-link">See All →</a></div>
+     <div class="app-list">${newApps.map(appCard).join('')}</div>`;
+
+  // Top
+  const topApps=APPS.slice().sort((a,b)=>(b.downloads||0)-(a.downloads||0)).slice(0,6);
+  document.getElementById('topSection').innerHTML=
+    `<div class="section-head"><div class="section-title">🔥 Top Downloads</div><a href="apps.html" class="section-link">See All →</a></div>
+     <div class="app-list">${topApps.map(appCard).join('')}</div>`;
+
+  // Featured
+  const featApps=APPS.filter(a=>a.isFeatured);
+  if(featApps.length>1) document.getElementById('featuredSection').innerHTML=
+    `<div class="section-head"><div class="section-title">⭐ Editor's Picks</div></div>
+     <div class="app-list">${featApps.map(appCard).join('')}</div>`;
+
+  renderFooter();
+}
+
+function filterApps(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  if(!q){render();return}
+  const results=APPS.filter(a=>a.name.toLowerCase().includes(q)||a.tagline.toLowerCase().includes(q)||a.category.toLowerCase().includes(q));
+  document.getElementById('newSection').innerHTML=
+    `<div class="section-head"><div class="section-title">🔍 Search Results</div></div>
+     <div class="app-list">${results.length?results.map(appCard).join(''):'<div class="empty"><div class="empty-icon">🔍</div><h3>No apps found</h3></div>'}</div>`;
+  document.getElementById('topSection').innerHTML='';
+  document.getElementById('featuredSection').innerHTML='';
+}
+
+function renderFooter(){
+  document.getElementById('footer').innerHTML=
+    `<div class="container"><div class="footer-inner">
+      <div class="footer-brand"><a href="index.html" class="nav-logo"><div class="logo-icon">D</div>Drifts<span style="color:#748ffc">AI</span></a><p>${SITE.description}</p></div>
+      <div><h4>Explore</h4><a href="apps.html">All Apps</a></div>
+      <div><h4>Connect</h4><a href="${SOCIAL.twitter.url}" target="_blank">𝕏 ${SOCIAL.twitter.handle}</a><a href="${SOCIAL.instagram.url}" target="_blank">📷 ${SOCIAL.instagram.handle}</a><a href="${SOCIAL.email.url}">✉ ${SOCIAL.email.handle}</a></div>
+    </div><div class="footer-bottom">© ${new Date().getFullYear()} ${SITE.name}. All rights reserved.</div></div>`;
+}
+
+render();
+</script>
+</body>
+</html>
