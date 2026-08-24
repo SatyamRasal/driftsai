@@ -43,24 +43,44 @@ const SITE = {
 const APPS = [
   // ── EXAMPLE APP 1 (delete this and add your own) ──
   {
-
   id: "vittam",
   name: "Vittam",
-  tagline: "invoice. Simplified.",
-  description: "",
-  category: "AI Tools",
+  tagline: "Your Business. Simplified",
+  description: "Vittam is a powerful, offline-first desktop application designed for freelancers, consultants, and agencies. It simplifies client management, invoice generation, time tracking, expense recording, and profit/loss reporting into one unified interface—eliminating recurring monthly SaaS subscription fees forever.",
+  category: "Productivity",
   developer: "DriftsAI",
   version: "1.0.0",
-  fileType: "APK",
-  fileSize: "",
-  platform: [],
-  downloadUrl: "",
-  icon: "",
-  screenshots: [],
-  features: [],
-  requirements: [],
-  whatsNew: "",
-  isFeatured: false,
+  fileType: "EXE",
+  fileSize: "80 MB",
+  platform: [
+    "Windows"
+  ],
+  downloadUrl: "https://drive.google.com/file/d/1na9VWAk_cC1FPw6ZyNBHfcuBwzGRJYAu/view?usp=sharing",
+  icon: "https://driftsai.com/assets/vittam.png",
+  screenshots: [
+    "https://driftsai.com/assets/vittam_1.png",
+    "https://driftsai.com/assets/vittam_2.png",
+    "https://driftsai.com/assets/vittam_3.png",
+    "https://driftsai.com/assets/vittam_4.png",
+    "https://driftsai.com/assets/vittam_5.png"
+  ],
+  features: [
+    "Instant professional invoice generation with custom branding",
+    "Built-in time tracker to log billable hours directly to invoices",
+    "Offline-first architecture for 100% data privacy and zero cloud dependency",
+    "Comprehensive client management database",
+    "Automated profit & loss, tax summary, and client revenue reporting",
+    "Support for estimates, quotes, credit notes, and expense logging",
+    "One-time payment model with lifetime access and zero subscription fees"
+  ],
+  requirements: [
+    "Windows 10 or Windows 11 (64-bit)",
+    "4 GB RAM minimum (8 GB recommended)",
+    "200 MB free disk space",
+    "Display resolution of 1280x800 or higher"
+  ],
+  whatsNew: "Initial public release of Vittam Desktop v1.0.0\n\nComplete invoice management engine supporting multi-currency billing\n\nIntegrated real-time hourly tracking to invoice conversion\n\nCustom expense classification and financial reporting tools",
+  isFeatured: true,
   downloads: 0,
   rating: 0
 }
