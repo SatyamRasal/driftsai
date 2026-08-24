@@ -10,9 +10,9 @@ const ADMIN_PASSWORD = "driftsai2024";
 
 // ── YOUR SOCIAL LINKS ──
 const SOCIAL = {
-  twitter: { handle: "@driftsai", url: "https://twitter.com/driftsai" },
-  instagram: { handle: "@driftsai", url: "https://instagram.com/driftsai" },
-  email: { handle: "contact@driftsai.com", url: "mailto:contact@driftsai.com?subject=Interested%20in%20buying" },
+  twitter: { handle: "@driftsai", url: "https://twitter.com/drifts_ai" },
+  instagram: { handle: "@driftsai", url: "https://instagram.com/drifts_ai" },
+  email: { handle: "satyamrasal13499@gmail.com", url: "mailto:atyamrasal13499@gmail.com?subject=Interested%20in%20buying" },
 };
 
 // ── YOUR SITE INFO ──
