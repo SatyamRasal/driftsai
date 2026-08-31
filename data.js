@@ -83,6 +83,44 @@ const APPS = [
   isFeatured: true,
   downloads: 0,
   rating: 0
+},
+{
+  id: "saloonbossx",
+  name: "SaloonbossX",
+  tagline: "All-in-One Salon & Beauty Parlor Management App",
+  description: "SaloonbossX is a complete salon management solution designed to streamline daily operations, track business performance, and boost revenue. Easily create bills, schedule appointments, track client histories, and manage staff attendance all in one place. With built-in expense management, automated cloud & WhatsApp backups, and real-time revenue analytics, SaloonbossX makes running your salon effortless and efficient.",
+  category: "Productivity",
+  developer: "DriftsAI",
+  version: "1.0.0",
+  fileType: "APK",
+  fileSize: "91",
+  platform: [
+    "Android"
+  ],
+  downloadUrl: "https://drive.google.com/file/d/1Zw0REvdtxG_MKcPY3M0aikYpV4c33Din/view?usp=sharing",
+  icon: "https://driftsai.com/assets/Saloonbossx.png",
+  screenshots: [
+    "https://driftsai.com/assets/saloonbosssx_1.HEIC"
+  ],
+  features: [
+    "Appointment scheduling and status tracking (Completed, No-show)",
+    "Quick billing and GST/Tax customization",
+    "Real-time financial analytics (Revenue, Expenses, Profit trends)",
+    "Inventory management and low-stock alerts",
+    "Client history and re-engagement messaging",
+    "Expense tracking by category (Rent, Electricity, Water, Product Purchase)",
+    "Staff attendance and roles management",
+    "Automated daily local and WhatsApp backups",
+    "License & subscription plan tracking"
+  ],
+  requirements: [
+    "Android 6.0 and up",
+    "Active Internet connection for cloud backups"
+  ],
+  whatsNew: "Initial release featuring appointment booking, quick billing, inventory control, automated backups, and detailed revenue analytics dashboard.",
+  isFeatured: true,
+  downloads: 0,
+  rating: 0
 }
   // ── ADD MORE APPS BELOW ──
   // Copy the template above, change the values, and paste here.
