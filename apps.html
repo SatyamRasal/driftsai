@@ -34,7 +34,7 @@ function appCard(app){
   return`<a href="app.html?id=${app.id}" class="app-card">
     <div class="app-icon">${app.icon?`<img src="${app.icon}" alt="${app.name}" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=app-icon-placeholder>📦</div>'">`:'<div class="app-icon-placeholder">📦</div>'}</div>
     <div class="app-info"><div class="app-name">${app.name}</div><div class="app-tagline">${app.tagline}</div>
-      <div class="app-meta"><span class="app-badge">${app.fileType}</span><span>${app.fileSize}</span>${app.rating?`<span>⭐ ${app.rating}</span>`:''}<span>⬇ ${fmt(app.downloads)}</span></div>
+      <div class="app-meta"><span class="app-badge">${app.fileType}</span><span>${app.fileSize}</span>${app.rating?`<span>⭐ ${app.rating}</span>`:''}<span>⬇ ${fmt(getDownloadCount(app))}</span></div>
     </div><div class="app-get">GET</div></a>`
 }
 

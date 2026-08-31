@@ -45,7 +45,7 @@ if(!app){
         <div class="app-detail-meta">
           <span class="app-badge" style="font-size:11px">${app.category}</span>
           ${app.rating?`<span>⭐ ${app.rating}</span>`:''}
-          <span>⬇ ${fmt(app.downloads)} downloads</span>
+          <span id="downloadCount">⬇ ${fmt(getDownloadCount(app))} downloads</span>
         </div>
       </div>
     </div>
@@ -87,7 +87,7 @@ if(!app){
         <tr><td>File Type</td><td>${app.fileType}</td></tr>
         <tr><td>File Size</td><td>${app.fileSize}</td></tr>
         <tr><td>Platform</td><td>${app.platform.join(', ')}</td></tr>
-        <tr><td>Downloads</td><td>${fmt(app.downloads)}</td></tr>
+        <tr><td>Downloads</td><td id="downloadTableCount">${fmt(getDownloadCount(app))}</td></tr>
       </table>
     </div>
 
@@ -125,6 +125,9 @@ function startDownload(){
   }
   // Open download in new tab
   window.open(app.downloadUrl,'_blank');
+  recordDownload(app);
+  document.getElementById('downloadCount').textContent=`⬇ ${fmt(getDownloadCount(app))} downloads`;
+  document.getElementById('downloadTableCount').textContent=fmt(getDownloadCount(app));
   showToast('✅ Download started!');
 
   // Highlight contact card

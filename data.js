@@ -89,6 +89,27 @@ const APPS = [
   // Then push to GitHub and Netlify deploys automatically.
 ];
 
+const DOWNLOAD_COUNTS_KEY = "driftsai-download-counts";
+
+function getDownloadCount(app) {
+  try {
+    const counts = JSON.parse(localStorage.getItem(DOWNLOAD_COUNTS_KEY) || "{}");
+    return (app.downloads || 0) + (counts[app.id] || 0);
+  } catch {
+    return app.downloads || 0;
+  }
+}
+
+function recordDownload(app) {
+  try {
+    const counts = JSON.parse(localStorage.getItem(DOWNLOAD_COUNTS_KEY) || "{}");
+    counts[app.id] = (counts[app.id] || 0) + 1;
+    localStorage.setItem(DOWNLOAD_COUNTS_KEY, JSON.stringify(counts));
+  } catch {
+    // Continue updating the current page if storage is unavailable.
+  }
+}
+
 // ═══════════════════════════════════════════════════
 //  CATEGORIES — shown on homepage
 // ═══════════════════════════════════════════════════
