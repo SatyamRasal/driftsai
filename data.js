@@ -81,7 +81,7 @@ const APPS = [
   ],
   whatsNew: "Initial public release of Vittam Desktop v1.0.0\n\nComplete invoice management engine supporting multi-currency billing\n\nIntegrated real-time hourly tracking to invoice conversion\n\nCustom expense classification and financial reporting tools",
   isFeatured: true,
-  downloads: 0,
+  downloads: 35,
   rating: 0
 },
 {
@@ -119,7 +119,7 @@ const APPS = [
   ],
   whatsNew: "Initial release featuring appointment booking, quick billing, inventory control, automated backups, and detailed revenue analytics dashboard.",
   isFeatured: true,
-  downloads: 0,
+  downloads: 2,
   rating: 0
 }
   // ── ADD MORE APPS BELOW ──
