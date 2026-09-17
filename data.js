@@ -97,7 +97,7 @@ const APPS = [
   platform: [
     "Android"
   ],
-  downloadUrl: "https://drive.google.com/file/d/1Zw0REvdtxG_MKcPY3M0aikYpV4c33Din/view?usp=sharing",
+  downloadUrl: "https://drive.google.com/file/d/1M8a-ZDhFQhHGq532XcPVcCC7fFcXbpG0/view?usp=sharing",
   icon: "https://driftsai.com/assets/Saloonbossx.png",
   screenshots: [
     "https://driftsai.com/assets/saloonbosssx_1.HEIC"
