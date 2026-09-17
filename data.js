@@ -119,7 +119,7 @@ const APPS = [
   ],
   whatsNew: "Initial release featuring appointment booking, quick billing, inventory control, automated backups, and detailed revenue analytics dashboard.",
   isFeatured: true,
-  downloads: 2,
+  downloads: 9,
   rating: 0
 }
   // ── ADD MORE APPS BELOW ──
