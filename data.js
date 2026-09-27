@@ -121,6 +121,45 @@ const APPS = [
   isFeatured: true,
   downloads: 9,
   rating: 0
+},
+
+{
+  id: "rasoione",
+  name: "RasoiOne",
+  tagline: "Offline-first restaurant POS — billing, kitchen display & inventory in one app",
+  description: "RasoiOne is an offline-first Point of Sale app built for Indian restaurants\nand food businesses. Take orders and bill customers with UPI, cash, or card,\nsend tickets straight to a kitchen display, manage your menu with photos and\nlinked recipes, and track inventory with automatic stock deduction and\nlow-stock alerts.\n\nBeyond billing, RasoiOne gives owners real business tools: expense tracking,\nfull profit & loss reports, a GST + income-tax estimate report, staff\nrosters with PIN-based role access, customer CRM with loyalty points, and\nBluetooth thermal printer support for receipts and kitchen tickets. It works\nentirely offline, syncing license and backup data only when internet is\navailable, so it keeps running through spotty connections on the shop floor.",
+  category: "Productivity",
+  developer: "DriftsAI",
+  version: "3.1.0",
+  fileType: "APK",
+  fileSize: "100 MB",
+  platform: [
+    "Android"
+  ],
+  downloadUrl: "https://drive.google.com/file/d/1Rjyy0xt22owx_eoLDEkiLjpt-MlNNyjL/view?usp=sharing",
+  icon: "https://driftsai.com/assets/rasoione.png",
+  screenshots: [],
+  features: [
+    "POS billing with UPI, Cash & Card",
+    "Kitchen Display System (New → Preparing → Ready → Done)",
+    "Menu management with photos and linked recipes",
+    "Inventory tracking with low-stock push notifications",
+    "Customer CRM with loyalty points (Pro)",
+    "Full Profit & Loss and GST/tax reports (Pro)",
+    "4-tier licensing with in-app purchase via Razorpay",
+    "Staff roster, attendance, and role-based PIN access",
+    "Bluetooth thermal printer support for receipts",
+    "Auto-backup by email + daily sales summary",
+    "Works fully offline"
+  ],
+  requirements: [
+    "Android 8.0+",
+    "100 MB storage"
+  ],
+  whatsNew: "• Added 6 more business-type templates to onboarding (11 total)\n• Fixed tax auto-charging without GST and improved menu/inventory setup by business type\n• Fixed license device-ID race condition and payment error messaging\n• Fixed stock overselling, PIN lock bypass, and missing customer info on receipts",
+  isFeatured: false,
+  downloads: 0,
+  rating: 0
 }
   // ── ADD MORE APPS BELOW ──
   // Copy the template above, change the values, and paste here.
